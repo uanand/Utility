@@ -1,5 +1,4 @@
 import numpy
-import cv2
 import imageio
 import pandas
 from tqdm import tqdm
@@ -8,8 +7,11 @@ df = pandas.read_excel('inputs.xlsx',sheet_name='imageSequenceTomovie',names=['i
 
 for inputDir,firstFrame,lastFrame,inputFileExt,outputFile,outputFileExt,quality,allCompressionFlag in df.values:
     frameList = range(firstFrame,lastFrame+1)
-    if (numpy.isnan(outputFile)):
-        outputFile = inputDir+outputFileExt
+    try:
+        if (numpy.isnan(outputFile)):
+            outputFile = inputDir+outputFileExt
+    except:
+        pass
     if (numpy.isnan(quality)):
         quality = 5
     if (numpy.isnan(allCompressionFlag)):
