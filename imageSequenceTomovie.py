@@ -6,12 +6,23 @@ from tqdm import tqdm
 df = pandas.read_excel('inputs.xlsx',sheet_name='imageSequenceTomovie',names=['inputDir','firstFrame','lastFrame','inputFileExt','outputFile','outputFileExt','quality','allCompressionFlag','duration'])
 
 for inputDir,firstFrame,lastFrame,inputFileExt,outputFile,outputFileExt,quality,allCompressionFlag,duration in df.values:
+    outputFileNameFlag = 0
     frameList = range(firstFrame,lastFrame+1)
+    try:
+        if (numpy.isnan(inputFileExt)):
+            inputFileExt = '.png'
+    except:
+        pass
+    try:
+        if (numpy.isnan(outputFileExt)):
+            outputFileExt = '.mp4'
+    except:
+        pass
     try:
         if (numpy.isnan(outputFile)):
             outputFile = inputDir+outputFileExt
     except:
-        pass
+        outputFileNameFlag = 1
     if (numpy.isnan(quality)):
         quality = 5
     if (numpy.isnan(allCompressionFlag)):
@@ -24,7 +35,10 @@ for inputDir,firstFrame,lastFrame,inputFileExt,outputFile,outputFileExt,quality,
         qualityList = range(1,11)
         for quality in qualityList:
             print ('Saving movie for %s with quality %d' %(inputDir,quality))
-            output = outputFile.replace(outputFileExt,'_quality_'+str(quality).zfill(2)+outputFileExt)
+            if (outputFileNameFlag==0):
+                output = outputFile.replace(outputFileExt,'_quality_'+str(quality).zfill(2)+outputFileExt)
+            else:
+                output = outputFile
             w = imageio.get_writer(output,\
                                     format='FFMPEG',\
                                     fps=fps,\
@@ -38,7 +52,10 @@ for inputDir,firstFrame,lastFrame,inputFileExt,outputFile,outputFileExt,quality,
             w.close()
     else:
         print ('Saving movie for %s with quality %d' %(inputDir,quality))
-        output = outputFile.replace(outputFileExt,'_quality_'+str(int(quality)).zfill(2)+outputFileExt)
+        if (outputFileNameFlag==0):
+            output = outputFile.replace(outputFileExt,'_quality_'+str(int(quality)).zfill(2)+outputFileExt)
+        else:
+            output = outputFile
         w = imageio.get_writer(output,\
                                 format='FFMPEG',\
                                 fps=fps,\
