@@ -23,7 +23,7 @@ rank = comm.rank
 ############################################################
 # READ THE INPUT EXCEL FILE AND CONVERT MOVIE
 ############################################################
-df = pandas.read_excel('inputs.xlsx',sheet_name='convertGatanDM4Movies',names=['inputDir','outputPNGDir','outputPNGFlag','outputNPYFlag','scalingFactor','minPercentile','maxPercentile','averageFrames','firstFrame','lastFrame'],skiprows=1)
+df = pandas.read_excel('inputs.xlsx',sheet_name='convertGatanDM4Movies',names=['inputDir','outputPNGDir','outputPNGFlag','outputNPYFlag','scalingFactor','minPercentile','maxPercentile','averageFrames','firstFrame','lastFrame'])
 
 for inputDir,outputDir,outputPNGFlag,outputNPYFlag,scalingFactor,minPercentile,maxPercentile,averageFrames,firstFrame,lastFrame in df.values:
     if (rank == 0):
