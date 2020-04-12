@@ -12,4 +12,4 @@ for cropImgFile,gImgFile in df.values:
     result = match_template(gImg,cropImg)
     ij = numpy.unravel_index(numpy.argmax(result),result.shape)
     x,y = ij[::-1]
-    print ('%s\tStartrow:%d\tStartcol:%d\tHeight:%d\tWidth:%d' %(cropImgFile,y,x,rowCrop,colCrop))
+    print ('%s\tStartrow:%d\tStartcol:%d\tHeight:%d\tWidth:%d\tmakeRectangle(%d, %d, %d, %d)' %(cropImgFile,y,x,rowCrop,colCrop,x,y,colCrop,rowCrop))
