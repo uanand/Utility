@@ -1,5 +1,6 @@
 import os
 import numpy
+import platform
 from os.path import isdir,join
 from os import listdir
 
@@ -45,4 +46,26 @@ def getFiles(path,extension='dm4'):
                 k=k+1
     inputFileList = numpy.sort(inputFileList,kind='mergesort')
     return inputFileList
+####################################################
+
+####################################################
+def findSplitFiles(inputFile):
+    if (platform.system()=='Linux'):
+        tempList = inputFile.split('/')
+        path = ''
+        for temp in tempList[:-1]:
+            path = path+temp+'/'
+    elif (platform.system()=='Windows'):
+        tempList = inputFile.split('\\')
+        path = ''
+        for temp in tempList[:-1]:
+            path = path+temp+'\\'
+    fileName = inputFile.split('_split_0001')[0]+'_split_'
+    dirFileList = listdir(path)
+    splitFileList = []
+    for dirFile in dirFileList:
+        if (fileName in path+dirFile):
+            splitFileList.append(path+dirFile)
+    splitFileList = list(numpy.sort(splitFileList,kind='mergesort'))
+    return splitFileList
 ####################################################
