@@ -6,8 +6,8 @@ import os
 ############################################################
 df = pandas.read_excel('inputs.xlsx',sheet_name='splitFiles',names=['inputFile','deleteFlag'])
 
-chunkSizeMB = 64 # in MB
-fileSizeGB = 4 # in GB
+chunkSizeMB = 1024 # in MB
+fileSizeGB = 128 # in GB
 zfillVal = 4
 
 chunkSize = chunkSizeMB*1024*1024
