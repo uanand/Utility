@@ -1,31 +1,38 @@
 import psutil
 import time
+import platform
 import matplotlib.pyplot as plt
 from numpy import floor
-from datetime import datetime,timedelta
+from datetime import datetime
 
-dailyReportFrequency = 4 # AVAILABLE OPTION - 1, 2, 3, 4, 6, 8, 12, 24
+dailyReportFrequency = 12 # AVAILABLE OPTION - 1, 2, 3, 4, 6, 8, 12, 24
 refreshRate = 300 # in seconds
 
+if (platform.system()=='Linux'):
+    driveName,connectionName = 'sda2','wlp3s0'
+elif (platform.system()=='Windows'):
+    driveName,connectionName = 'PhysicalDrive2','Ethernet'
+    
 if (24%dailyReportFrequency!=0):
     print ('INVALID FREQUENCY. CHOOSE ONE OF THESE - 1,2,3,4,6,8,12,24')
 else:
     diskRead_MBps_list,diskWrite_MBps_list,byteSent_MBps_list,byteRecv_MBps_list,time_list = [],[],[],[],[]
     
-    diskRead_0 = psutil.disk_io_counters(perdisk=True)['PhysicalDrive2'].read_bytes
-    diskWrite_0 = psutil.disk_io_counters(perdisk=True)['PhysicalDrive2'].write_bytes
-        byteSent_0 = psutil.net_io_counters(pernic=True)['Ethernet'].bytes_sent
-    byteRecv_0 = psutil.net_io_counters(pernic=True)['Ethernet'].bytes_recv
+    diskRead_0 = psutil.disk_io_counters(perdisk=True)[driveName].read_bytes
+    diskWrite_0 = psutil.disk_io_counters(perdisk=True)[driveName].write_bytes
+    byteSent_0 = psutil.net_io_counters(pernic=True)[connectionName].bytes_sent
+    byteRecv_0 = psutil.net_io_counters(pernic=True)[connectionName].bytes_recv
+    
     time_0 = datetime.now()
     divisionNum0 = floor(time_0.hour/24*dailyReportFrequency)
     
     while(1):
         time.sleep(refreshRate)
         
-        diskRead_1 = psutil.disk_io_counters(perdisk=True)['PhysicalDrive2'].read_bytes
-        diskWrite_1 = psutil.disk_io_counters(perdisk=True)['PhysicalDrive2'].write_bytes
-        byteSent_1 = psutil.net_io_counters(pernic=True)['Ethernet'].bytes_sent
-        byteRecv_1 = psutil.net_io_counters(pernic=True)['Ethernet'].bytes_recv
+        diskRead_1 = psutil.disk_io_counters(perdisk=True)[driveName].read_bytes
+        diskWrite_1 = psutil.disk_io_counters(perdisk=True)[driveName].write_bytes
+        byteSent_1 = psutil.net_io_counters(pernic=True)[connectionName].bytes_sent
+        byteRecv_1 = psutil.net_io_counters(pernic=True)[connectionName].bytes_recv
         time_1 = datetime.now()
         
         diskRead_MBps_list.append((diskRead_1-diskRead_0)/(1024*1024)/refreshRate)
