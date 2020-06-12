@@ -8,7 +8,10 @@ import platform
 df = pandas.read_excel('inputs.xlsx',sheet_name='archiveFolder',names=['inputDir','deleteFlag'])
 
 if (platform.system()=='Linux'):
-    executable = '7z'
+    if ('LinuxMint' in platform.platform()):
+        executable = '7z'
+    elif ('centos' in platform.platform()):
+        executable = 'zip'
 elif (platform.system()=='Windows'):
     executable = 'C:/Program Files/7-Zip/7z.exe'
 for inputDir,deleteFlag in df.values:
@@ -16,7 +19,13 @@ for inputDir,deleteFlag in df.values:
     zipFileName = inputDir+'.zip'
     command = executable + zipFileName + ' ' + inputDir
     if (deleteFlag==1):
-        subprocess.run([executable,'a',zipFileName,inputDir,'-sdel'])
+        if (executable=='zip'):
+            subprocess.run([executable,'-qrm9T',zipFileName,inputDir])
+        else:
+            subprocess.run([executable,'a',zipFileName,inputDir,'-sdel'])
     else:
-        subprocess.run([executable,'a',zipFileName,inputDir])
+        if (executable=='zip'):
+            subprocess.run([executable,'-qr9T',zipFileName,inputDir])
+        else:
+            subprocess.run([executable,'a',zipFileName,inputDir])
 ############################################################
