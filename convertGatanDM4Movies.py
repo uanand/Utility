@@ -25,6 +25,10 @@ rank = comm.rank
 ############################################################
 df = pandas.read_excel('inputs.xlsx',sheet_name='convertGatanDM4Movies',names=['inputDir','outputPNGDir','outputPNGFlag','outputNPYFlag','scalingFactor','minPercentile','maxPercentile','averageFrames','firstFrame','lastFrame'])
 
+if (rank==0):
+    logFile = open('convertGatanDM4Movies.log','w')
+    logFile.write("InputDir\tFileName\tFrame\tCount\tPixel size (nm)\tFOV (nm)\tDose (e/(A2s))\tYear\tMonth\tDay\tHour\tMinute\tSecond\tMicrosecond\n")
+    
 for inputDir,outputDir,outputPNGFlag,outputNPYFlag,scalingFactor,minPercentile,maxPercentile,averageFrames,firstFrame,lastFrame in df.values:
     if (rank == 0):
         try:
@@ -123,8 +127,6 @@ for inputDir,outputDir,outputPNGFlag,outputNPYFlag,scalingFactor,minPercentile,m
     # FIRST PASS THROUGH ALL FILES TO GET THE CONTRAST VALUE
     outFile = open(str(rank)+'.dat','w')
     outFileCounts = open('counts_'+str(rank)+'.dat','w')
-    if (rank==0):
-        outFile.write("InputDir\tFileName\tFrame\tCount\tPixel size (nm)\tFOV (nm)\tDose (e/(A2s))\tYear\tMonth\tDay\tHour\tMinute\tSecond\tMicrosecond\n")
     for inputDir,frame,inputFile,outputPNGFile,outputPNGFlag,outputNPYFile,outputNPYFlag,scale,minPercentile,maxPercentile,averageFrames in tqdm(fileInfoProc[rank]):
         try:
             f = hs.load(inputFile)
@@ -172,13 +174,12 @@ for inputDir,outputDir,outputPNGFlag,outputNPYFlag,scalingFactor,minPercentile,m
     ############################################################
     # COMPILE INFORMATION FROM LOG FILES AND CONTRAST FILES
     if (rank==0):
-        outFile = open('convertGatanDM4MoviesLog.dat','w')
         for r in range(size):
             inFile = open(str(r)+'.dat','r')
             for line in inFile:
-                outFile.write(line)
+                logFile.write(line)
             os.remove(str(r)+'.dat')
-        outFile.close()
+            
         outFileCounts = open('counts.dat','w')
         for r in range(size):
             inFile = open('counts_'+str(r)+'.dat','r')
@@ -222,4 +223,5 @@ for inputDir,outputDir,outputPNGFlag,outputNPYFlag,scalingFactor,minPercentile,m
         except:
             pass
     comm.barrier()
+logFile.close()
 ############################################################
