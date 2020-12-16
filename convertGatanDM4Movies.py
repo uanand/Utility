@@ -223,5 +223,7 @@ for inputDir,outputDir,outputPNGFlag,outputNPYFlag,scalingFactor,minPercentile,m
         except:
             pass
     comm.barrier()
-logFile.close()
+    
+if (rank==0):
+    logFile.close()
 ############################################################
