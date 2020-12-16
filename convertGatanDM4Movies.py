@@ -33,7 +33,7 @@ for inputDir,outputDir,outputPNGFlag,outputNPYFlag,scalingFactor,minPercentile,m
     if (rank == 0):
         try:
             if (numpy.isnan(outputDir)):
-                outputDir = inputDir+'_converted'
+                outputDir = inputDir+'_Export'
                 utils.mkdir(outputDir)
         except:
             pass
